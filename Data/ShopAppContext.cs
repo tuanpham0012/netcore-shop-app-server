@@ -55,13 +55,15 @@ public partial class ShopAppContext : DbContext
 
 //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Data Source=localhost, 1434;Initial Catalog=shop_app;User ID=sa;Password=Anhem123@;Trust Server Certificate=True");
+//        => optionsBuilder.UseSqlServer("Data Source=localhost,1434;Initial Catalog=shop_app;User ID=sa;Password=Anhem123@;Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.UseCollation("Vietnamese_100_CI_AI_SC_UTF8");
+
         modelBuilder.Entity<Cart>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__carts__3213E83F4FCFA66E");
+            entity.HasKey(e => e.Id).HasName("PK__carts__3213E83FEBA99E0C");
 
             entity.ToTable("carts");
 
@@ -97,7 +99,7 @@ public partial class ShopAppContext : DbContext
 
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__categori__3213E83F7BC967AE");
+            entity.HasKey(e => e.Id).HasName("PK__categori__3213E83F5B0A9517");
 
             entity.ToTable("categories");
 
@@ -129,7 +131,7 @@ public partial class ShopAppContext : DbContext
 
         modelBuilder.Entity<Customer>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__customer__3213E83F47497DC1");
+            entity.HasKey(e => e.Id).HasName("PK__customer__3213E83FBB41251A");
 
             entity.ToTable("customers");
 
@@ -148,6 +150,9 @@ public partial class ShopAppContext : DbContext
             entity.Property(e => e.EmailVerifiedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("email_verified_at");
+            entity.Property(e => e.Gender)
+                .HasDefaultValueSql("('0')")
+                .HasColumnName("gender");
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
@@ -160,6 +165,10 @@ public partial class ShopAppContext : DbContext
             entity.Property(e => e.RememberToken)
                 .HasMaxLength(100)
                 .HasColumnName("remember_token");
+            entity.Property(e => e.Salt).HasColumnName("salt");
+            entity.Property(e => e.Status)
+                .HasDefaultValueSql("('0')")
+                .HasColumnName("status");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
@@ -167,7 +176,7 @@ public partial class ShopAppContext : DbContext
 
         modelBuilder.Entity<Discount>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__discount__3213E83F119956CB");
+            entity.HasKey(e => e.Id).HasName("PK__discount__3213E83FE65BD8D1");
 
             entity.ToTable("discounts");
 
@@ -199,7 +208,7 @@ public partial class ShopAppContext : DbContext
 
         modelBuilder.Entity<FailedJob>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__failed_j__3213E83F15C9373E");
+            entity.HasKey(e => e.Id).HasName("PK__failed_j__3213E83FC2AF5B39");
 
             entity.ToTable("failed_jobs");
 
@@ -221,7 +230,7 @@ public partial class ShopAppContext : DbContext
 
         modelBuilder.Entity<Migration>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__migratio__3213E83F44044745");
+            entity.HasKey(e => e.Id).HasName("PK__migratio__3213E83FC95C6F2A");
 
             entity.ToTable("migrations");
 
@@ -234,11 +243,16 @@ public partial class ShopAppContext : DbContext
 
         modelBuilder.Entity<Option>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__options__3213E83FF752813D");
+            entity.HasKey(e => e.Id).HasName("PK__options__3213E83F178DA779");
 
             entity.ToTable("options");
 
+            entity.HasIndex(e => e.Code, "options_code_unique").IsUnique();
+
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Code)
+                .HasMaxLength(64)
+                .HasColumnName("code");
             entity.Property(e => e.CreatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("created_at");
@@ -253,7 +267,7 @@ public partial class ShopAppContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
             entity.Property(e => e.Visual)
-                .HasMaxLength(100)
+                .HasDefaultValueSql("('0')")
                 .HasColumnName("visual");
 
             entity.HasOne(d => d.Product).WithMany(p => p.Options)
@@ -264,11 +278,16 @@ public partial class ShopAppContext : DbContext
 
         modelBuilder.Entity<OptionValue>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__option_v__3213E83F8F870F28");
+            entity.HasKey(e => e.Id).HasName("PK__option_v__3213E83F989B962B");
 
             entity.ToTable("option_values");
 
+            entity.HasIndex(e => e.Code, "option_values_code_unique").IsUnique();
+
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Code)
+                .HasMaxLength(64)
+                .HasColumnName("code");
             entity.Property(e => e.CreatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("created_at");
@@ -297,7 +316,7 @@ public partial class ShopAppContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__orders__3213E83FAF0FDBDE");
+            entity.HasKey(e => e.Id).HasName("PK__orders__3213E83FB50F6838");
 
             entity.ToTable("orders");
 
@@ -338,7 +357,7 @@ public partial class ShopAppContext : DbContext
 
         modelBuilder.Entity<OrderDetail>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__order_de__3213E83F39280B42");
+            entity.HasKey(e => e.Id).HasName("PK__order_de__3213E83F3462B3F4");
 
             entity.ToTable("order_details");
 
@@ -394,7 +413,7 @@ public partial class ShopAppContext : DbContext
 
         modelBuilder.Entity<PersonalAccessToken>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__personal__3213E83F6C3B38F5");
+            entity.HasKey(e => e.Id).HasName("PK__personal__3213E83F607BD3B1");
 
             entity.ToTable("personal_access_tokens");
 
@@ -430,7 +449,7 @@ public partial class ShopAppContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__products__3213E83F41E69484");
+            entity.HasKey(e => e.Id).HasName("PK__products__3213E83F48B140DB");
 
             entity.ToTable("products");
 
@@ -440,6 +459,9 @@ public partial class ShopAppContext : DbContext
             entity.Property(e => e.Alias)
                 .HasMaxLength(255)
                 .HasColumnName("alias");
+            entity.Property(e => e.Barcode)
+                .HasMaxLength(50)
+                .HasColumnName("barcode");
             entity.Property(e => e.CategoryId).HasColumnName("category_id");
             entity.Property(e => e.Code)
                 .HasMaxLength(24)
@@ -472,13 +494,12 @@ public partial class ShopAppContext : DbContext
 
             entity.HasOne(d => d.Supplier).WithMany(p => p.Products)
                 .HasForeignKey(d => d.SupplierId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("products_supplier_foreign");
+                .HasConstraintName("products_supplier_id_foreign");
         });
 
         modelBuilder.Entity<ProductComment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__product___3213E83F75B40E6A");
+            entity.HasKey(e => e.Id).HasName("PK__product___3213E83F92B15C90");
 
             entity.ToTable("product_comments");
 
@@ -510,7 +531,7 @@ public partial class ShopAppContext : DbContext
 
         modelBuilder.Entity<ProductStatistic>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__product___3213E83FC2D8343F");
+            entity.HasKey(e => e.Id).HasName("PK__product___3213E83F49E5F7C8");
 
             entity.ToTable("product_statistics");
 
@@ -543,7 +564,7 @@ public partial class ShopAppContext : DbContext
 
         modelBuilder.Entity<Sku>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__skus__3213E83F9718887C");
+            entity.HasKey(e => e.Id).HasName("PK__skus__3213E83FDE50B544");
 
             entity.ToTable("skus");
 
@@ -576,7 +597,7 @@ public partial class ShopAppContext : DbContext
 
         modelBuilder.Entity<Supplier>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__supplier__3213E83F4C253A47");
+            entity.HasKey(e => e.Id).HasName("PK__supplier__3213E83FA0F5CB88");
 
             entity.ToTable("suppliers");
 
@@ -617,7 +638,7 @@ public partial class ShopAppContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__users__3213E83FCA0ECE4A");
+            entity.HasKey(e => e.Id).HasName("PK__users__3213E83F5AFAF7CF");
 
             entity.ToTable("users");
 
@@ -628,7 +649,7 @@ public partial class ShopAppContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("created_at");
             entity.Property(e => e.Email)
-                .HasMaxLength(100)
+                .HasMaxLength(255)
                 .HasColumnName("email");
             entity.Property(e => e.EmailVerifiedAt)
                 .HasColumnType("datetime")
@@ -642,6 +663,7 @@ public partial class ShopAppContext : DbContext
             entity.Property(e => e.RememberToken)
                 .HasMaxLength(100)
                 .HasColumnName("remember_token");
+            entity.Property(e => e.Salt).HasColumnName("salt");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
@@ -649,7 +671,7 @@ public partial class ShopAppContext : DbContext
 
         modelBuilder.Entity<Variant>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__variants__3213E83F62818F15");
+            entity.HasKey(e => e.Id).HasName("PK__variants__3213E83FBDC0EF06");
 
             entity.ToTable("variants");
 

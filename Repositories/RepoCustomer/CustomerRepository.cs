@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using ShopAppApi.Data;
 using ShopAppApi.Helpers;
+using ShopAppApi.Request;
 using ShopAppApi.Response;
 using System.Net;
 using System.Numerics;
@@ -44,18 +45,18 @@ namespace ShopAppApi.Repositories.RepoCustomer
                 Status = customer.Status
             }).AsQueryable().OrderByDescending(q => q.Id);
 
-            if (!request.search.IsNullOrEmpty()) {
-                query = query.Where(q => q.Name.Contains(request.search) || q.Email.Contains(request.search) || q.Phone.Contains(request.search));
+            if (!request.Search.IsNullOrEmpty()) {
+                query = query.Where(q => q.Name.Contains(request.Search) || q.Email.Contains(request.Search) || q.Phone.Contains(request.Search));
             }
 
-            if (request.status != null) {
-                query = query.Where(q => q.Status == request.status);
+            if (request.Status != null) {
+                query = query.Where(q => q.Status == request.Status);
             }
 
 
 
             var data = await PaginatedList<Customer>.CreateAsync(
-                query.AsNoTracking(), request.page, request.pageSize);
+                query.AsNoTracking(), request.Page, request.PageSize);
 
             //if (!request.search.IsNullOrEmpty())
 
@@ -92,7 +93,9 @@ namespace ShopAppApi.Repositories.RepoCustomer
                 Salt = hash.Salt.ToString(),
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
-                Status = customer.Status ?? 0
+                Status = customer.Status,
+                Gender = customer.Gender
+                
             };
             _context.Add(entry);
             _context.SaveChanges();
@@ -116,6 +119,7 @@ namespace ShopAppApi.Repositories.RepoCustomer
                 _customer.Phone = customer.Phone ?? "";
                 _customer.Address = customer.Address ?? "";
                 _customer.Status = customer.Status;
+                _customer.Gender = customer.Gender;
                 _customer.UpdatedAt = DateTime.UtcNow;
                 _context.SaveChanges();
             }

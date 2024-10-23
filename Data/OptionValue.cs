@@ -7,6 +7,8 @@ public partial class OptionValue
 {
     public long Id { get; set; }
 
+    public string? Code { get; set; }
+
     public long ProductId { get; set; }
 
     public long OptionId { get; set; }

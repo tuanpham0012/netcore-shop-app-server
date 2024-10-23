@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
@@ -10,10 +11,13 @@ namespace ShopAppApi.Helpers
     {
         HashSalt EncryptPassword(string password);
         bool VerifyPassword(string enteredPassword, byte[] salt, string storedPassword);
+
+        String RandomString(int length);
     }
 
     public class StringHelper : IStringHelper
     {
+        private static Random random = new Random();
 
         public HashSalt EncryptPassword(string password)
         {
@@ -46,6 +50,13 @@ namespace ShopAppApi.Helpers
                 numBytesRequested: 256 / 8
             ));
             return encryptedPassw == storedPassword;
+        }
+
+        public string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
         }
     }
 

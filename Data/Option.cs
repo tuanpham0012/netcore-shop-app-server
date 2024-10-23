@@ -7,11 +7,13 @@ public partial class Option
 {
     public long Id { get; set; }
 
+    public string? Code { get; set; }
+
     public long ProductId { get; set; }
 
     public string Name { get; set; } = null!;
 
-    public string Visual { get; set; } = null!;
+    public byte Visual { get; set; }
 
     public byte Order { get; set; }
 

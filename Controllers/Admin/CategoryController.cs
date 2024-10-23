@@ -7,7 +7,7 @@ using ShopAppApi.Response;
 namespace ShopAppApi.Controllers.Admin
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("categories")]
     public class CategoryController : Controller
     {
         private readonly ICategoryRepository _repo;

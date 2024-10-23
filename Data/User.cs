@@ -15,6 +15,8 @@ public partial class User
 
     public string Password { get; set; } = null!;
 
+    public string? Salt { get; set; }
+
     public string? RememberToken { get; set; }
 
     public DateTime? CreatedAt { get; set; }

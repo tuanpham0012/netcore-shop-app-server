@@ -21,13 +21,13 @@ public partial class Sku
 
     public DateTime? UpdatedAt { get; set; }
 
-    public virtual ICollection<Cart> Carts { get; set; } = [];
+    public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
-    public virtual ICollection<Discount> Discounts { get; set; } = [];
+    public virtual ICollection<Discount> Discounts { get; set; } = new List<Discount>();
 
-    public virtual ICollection<OrderDetail> OrderDetails { get; set; } = [];
+    public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
     public virtual Product Product { get; set; } = null!;
 
-    public virtual ICollection<Variant> Variants { get; set; } = [];
+    public virtual ICollection<Variant> Variants { get; set; } = new List<Variant>();
 }

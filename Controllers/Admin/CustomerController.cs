@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShopAppApi.Data;
 using ShopAppApi.Repositories.RepoCustomer;
+using ShopAppApi.Request;
 using ShopAppApi.Response;
 
 namespace ShopAppApi.Controllers.Admin
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("customers")]
     public class CustomerController : Controller
     {
         private readonly ICustomerRepository _repo;
